@@ -22,7 +22,16 @@ function AddItem ($itemname) {
     }
     if ($Full -ge $Inventaire.Length)
     {
-        echo "Inventaire plein, vous laissez $itemname par terre"
+        InfoInventaire
+        Write-Host "Vous venez d'obtenir $itemname !" -ForegroundColor Yellow
+        Write-Host "Votre inventaire est plein ! Remplacer un objet ?" -ForegroundColor Yellow
+        Write-Host "Numero de l'objet à remplacer ou N pour annuler" -ForegroundColor Gray
+        $choice = Read-Host
+        if ($choice -match 'N'){Write-Host "Vous laissez $itemname par terre"}
+        else
+        {
+            $Inventaire[$choice] = $itemname
+        }
     }
 
 }
@@ -39,17 +48,21 @@ function RemoveItem ($itemname) {
 }
 
 function Use ($itemname) {
-    if ($DATAFOOD.Contains($itemname))
+    if ($DATAFOOD_RARITY1.Contains($itemname) -or $DATAFOOD_RARITY2.Contains($itemname) -or $DATAFOOD_RARITY3.Contains($itemname) -or $DATAFOOD_RARITY4.Contains($itemname) -or $DATAFOOD_RARITY5.Contains($itemname))
     {
         UseFood $itemname
     }
-    elseif ($DATAWEAPONS.Contains($itemname))
+    elseif ($DATAWEAPONS_RARITY1.Contains($itemname) -or $DATAWEAPONS_RARITY2.Contains($itemname) -or $DATAWEAPONS_RARITY3.Contains($itemname) -or $DATAWEAPONS_RARITY4.Contains($itemname) -or $DATAWEAPONS_RARITY5.Contains($itemname))
     {
         UseWeapon $itemname
     }
-    elseif ($DATACOMMONS.Contains($itemname))
+    elseif ($DATACOMMONS_RARITY1.Contains($itemname) -or $DATACOMMONS_RARITY2.Contains($itemname) -or $DATACOMMONS_RARITY3.Contains($itemname) -or $DATACOMMONS_RARITY4.Contains($itemname) -or $DATACOMMONS_RARITY5.Contains($itemname))
     {
         UseCommon $itemname
+    }
+    elseif ($DATAARMOR_RARITY1.Contains($itemname) -or $DATAARMOR_RARITY2.Contains($itemname) -or $DATAARMOR_RARITY3.Contains($itemname) -or $DATAARMOR_RARITY4.Contains($itemname) -or $DATAARMOR_RARITY5.Contains($itemname))
+    {
+        UseArmor $itemname
     }
     elseif ($DATAARTEFACT.Contains($itemname))
     {
@@ -405,6 +418,57 @@ function UseCommon ($commonname)
             RegenLife ($PV / 3)
             RemoveItem "Stimpack"
         }
+    }
+}
+
+function UseArmor ($armorname)
+{
+    [string]$Choix = "N"
+    "T-shirt renforcé","Doudoune résistante","Veston de cuir","Armure en plastique","Costume de Thor"
+    if ($ArmureEquipe -ne "T-shirt")
+    {
+        Write-Host "Déséquiper $ArmureEquipe ? (Oui / Non)"
+        $Choix = Read-Host
+    }
+
+    if ($Choix -notmatch "N" -and $Choix -match "O")
+    {
+        AddItem $ArmureEquipe
+        switch ($armorname)
+        {
+            "T-shirt renforcé"
+            {
+                Write-Host "Vous enfilez un t-shirt renforcé" -ForegroundColor Yellow
+                $Script:ArmureEquipe = "T-shirt renforcé"
+                $Script:ValArmure = 15    
+            }
+            "Doudoune résistante"
+            {
+                Write-Host "Vous enfilez une bonne doudoune" -ForegroundColor Yellow
+                $Script:ArmureEquipe = "Doudoune résistante"
+                $Script:ValArmure = 20     
+            }
+            "Veston de cuir"
+            {
+                Write-Host "Vous enfilez un veston de cuir. cuir. cuir. moustache." -ForegroundColor Yellow
+                $Script:ArmureEquipe = "Veston de cuir"
+                $Script:ValArmure = 22 
+            }
+            "Armure en plastique"
+            {
+                Write-Host "Vous enfilez une armure de plastique" -ForegroundColor Yellow
+                $Script:ArmureEquipe = "Armure en plastique"
+                $Script:ValArmure = 18             
+            }
+            "Costume de Thor"
+            {
+                Write-Host "Vous enfilez un joli costume de thor. Bravo, vous êtes ridicule" -ForegroundColor Yellow
+                $Script:ArmureEquipe = "Costume de Thor"
+                $Script:ValArmure = 7  
+            }
+        }
+        CalculateStats
+
     }
 }
 

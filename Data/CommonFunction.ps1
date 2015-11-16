@@ -1,28 +1,47 @@
 ﻿# Fonctions
 function PlayTitle () {
-    Write-Host "                                                                                    " -BackgroundColor Gray -ForegroundColor Red
-    Write-Host "         ████████████  ██████     ████  █████   █████   ████████                    " -BackgroundColor Gray -ForegroundColor Red
+    Write-Host "                                                                                    "  -ForegroundColor Red
+    Write-Host "         ████████████  ██████     ████  █████   █████   ████████                    "  -ForegroundColor Red
     Start-Sleep -Milliseconds 100
-    Write-Host "          ██████████    ████     ████    ███     ███   ██████████   █▌              " -BackgroundColor Gray -ForegroundColor Red
+    Write-Host "          ██████████    ████     ████    ███     ███   ██████████   █▌              "  -ForegroundColor Red
     Start-Sleep -Milliseconds 100
-    Write-Host "         ███           █████    █████    ███    ███    ████     █   ██▌             " -BackgroundColor Gray -ForegroundColor Red
+    Write-Host "         ███           █████    █████    ███    ███    ████     █   ██▌             "  -ForegroundColor Red
     Start-Sleep -Milliseconds 100
-    Write-Host "  ___╔═══████████══════██████═██████═════███════███════████══════════██▄▄▄▄▄▄▄▄▄▀█  " -BackgroundColor Gray -ForegroundColor Red
+    Write-Host "  ___╔═══████████══════██████═██████═════███════███════████══════════██▄▄▄▄▄▄▄▄▄▀█  "  -ForegroundColor Red
     Start-Sleep -Milliseconds 100
-    Write-Host " ║------████████------███-██████-███-----███---███------██████------██║▒║▒║▒║▒║▒║▌  " -BackgroundColor Gray -ForegroundColor Red
+    Write-Host " ║------████████------███-██████-███-----███---███------██████------██║▒║▒║▒║▒║▒║▌  "  -ForegroundColor Red
     Start-Sleep -Milliseconds 100
-    Write-Host "  ¯¯¯╚══███═══════════███══████══███══════███══███══════════███══════██▀▀▀▀▀▀▀▀▀▄█  " -BackgroundColor Gray -ForegroundColor Red
+    Write-Host "  ¯¯¯╚══███═══════════███══████══███══════███══███══════════███══════██▀▀▀▀▀▀▀▀▀▄█  "  -ForegroundColor Red
     Start-Sleep -Milliseconds 100
-    Write-Host "       ███           ███        ███       ███ ███    ██     ███     ██▌             " -BackgroundColor Gray -ForegroundColor Red
+    Write-Host "       ███           ███        ███       ███ ███    ██     ███     ██▌             "  -ForegroundColor Red
     Start-Sleep -Milliseconds 100
-    Write-Host "       ███████████   ███        ███       ██████     ██████████     █▌              " -BackgroundColor Gray -ForegroundColor Red
+    Write-Host "       ███████████   ███        ███       ██████     ██████████     █▌              "  -ForegroundColor Red
     Start-Sleep -Milliseconds 100
-    Write-Host "      ███████████   █████      █████       ████       ████████                      " -BackgroundColor Gray -ForegroundColor Red
-    Write-Host "                                                                                    " -BackgroundColor Gray -ForegroundColor Red
+    Write-Host "      ███████████   █████      █████       ████       ████████                      "  -ForegroundColor Red
+    Write-Host "                                                                                    "  -ForegroundColor Red
     Write-Host "EMVS Adventure  v0.85b"
     Start-Sleep 2
     cls
 }
+
+function BarAffichage($Total, $Partiel,$BackgroundColor,$ForegroundColor){
+
+    $iNbCharacters = 51
+
+    <# Affichage de la barre #>
+
+    $nbFoisRepeat = [System.Math]::Round($Partiel * $iNbCharacters / $Total)
+    
+    for($index = 0; $index -lt $nbFoisRepeat; $index++){
+        $lfBar += "█"
+    }
+
+    for($index = 0; $index -lt $iNbCharacters - $nbFoisRepeat; $index++){
+        $lfBar += " "
+    }
+    Write-Host $lfBar -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
+}
+
 function InfoPlayer () {
     cls
     <#
@@ -33,34 +52,9 @@ function InfoPlayer () {
     Write-Host "            Barre de vie / Barre d'xp" -ForegroundColor Yellow
     Write-Host "====================================================" -ForegroundColor Yellow
 
-    $iNbCharacters = 51
+    BarAffichage -Total $PV -Partiel $PVActu -BackgroundColor "Red" -ForegroundColor "Green"
 
-    $nbFoisRepeat = $PVActu * $iNbCharacters / $PV
-    
-    for($index = 0; $index -lt $nbFoisRepeat; $index++){
-        $lfString += "█"
-    }
-
-    for($index = 0; $index -lt $iNbCharacters - $nbFoisRepeat; $index++){
-        $lfString += " "
-    }
-
-    Write-Host $lfString -ForegroundColor Green -BackgroundColor Red
-
-    <# Affichage de la barre d'XP #>
-
-    $XPTotal = 1000 * $Level
-
-    $nbFoisRepeat = $XP * $iNbCharacters / $XPTotal
-    
-    for($index = 0; $index -lt $nbFoisRepeat; $index++){
-        $lfXp += "█"
-    }
-
-    for($index = 0; $index -lt $iNbCharacters - $nbFoisRepeat; $index++){
-        $lfXp += " "
-    }
-    Write-Host $lfXp -ForegroundColor Cyan -BackgroundColor DarkCyan
+    BarAffichage -Total (1000 * $Level) -Partiel $XP -BackgroundColor "DarkCyan" -ForegroundColor "Cyan"
 
     Write-Host "====================================================" -ForegroundColor Yellow
 
@@ -89,6 +83,7 @@ function InfoInventaire () {
     echo "Vous avez $Argent francs dans votre portefeuille"
     echo "Vous vous battez avec $ArmeEquipe"
     echo "Vous êtes equippé de $ArmureEquipe"
+    echo "Votre armure vous confère un bonus de $ValArmure points d'armure"
     echo ""
     Write-Host "==============================" -ForegroundColor Yellow
     Write-Host " Contenu de votre Inventaire  " -ForegroundColor Yellow
@@ -145,19 +140,9 @@ function MagicMenu () {
     Write-Host "====================================================" -ForegroundColor Yellow
     Write-Host "                     Barre de PM" -ForegroundColor Yellow
     Write-Host "====================================================" -ForegroundColor Yellow
-    $iNbCharacters = 51
 
-    $nbFoisRepeat = $PMActu * $iNbCharacters / $PM
-    
-    for($index = 0; $index -lt $nbFoisRepeat; $index++){
-        $lfString += "█"
-    }
+    BarAffichage -Total $PM -Partiel $PMActu -BackgroundColor "DarkMagenta" -ForegroundColor "Magenta"
 
-    for($index = 0; $index -lt $iNbCharacters - $nbFoisRepeat; $index++){
-        $lfString += " "
-    }
-
-    Write-Host $lfString -ForegroundColor Magenta -BackgroundColor DarkMagenta
     Write-Host "====================================================" -ForegroundColor Yellow
     Write-Host "                     Sorts Connus " -ForegroundColor Yellow
     Write-Host "====================================================" -ForegroundColor Yellow
@@ -188,10 +173,6 @@ function MagicMenu () {
         cls
         MagicMenu
     }
-
-
-
-
 }
 
 
@@ -224,40 +205,6 @@ function MoveMenu () {
     else
     {
         MoveMenu
-    }
-}
-
-function NatelMenu () {
-    cls
-    Write-Host "Vous sortez votre beau natel de votre poche"
-    echo ""
-    Write-Host "[NATEL] Que faire ?" -ForegroundColor Yellow
-    Write-Host "(Commander une Pizza / C ; Regarder un post sur 9gag / R ; Se Suicider / S ; Annuler / N)" -ForegroundColor Gray
-    $Todo = Read-Host
-    if ($Todo -match "n")
-    {
-        cls
-        echo "Annulation"
-    }
-    elseif ($Todo -match "C")
-    {
-        StartEvent "CommandePizza"
-    }
-    elseif ($Todo -match "R")
-    {
-        StartEvent "9GAG"
-    }
-    elseif ($Todo -match "S")
-    {
-        $confirm = ConfirmCommand
-        if ($confirm -eq $true)
-        {
-            PlayerDeath
-        }
-    }
-    else
-    {
-        NatelMenu
     }
 }
 
@@ -397,7 +344,7 @@ function SelectFilePath () {
 
 function ConfirmCommand () {
     [bool]$value = $false
-    [string]$confirm = Read-Host 'Veuillez confirmer l`action (Oui / Non)'
+    [string]$confirm = Read-Host "Veuillez confirmer l'action (Oui / Non)"
     if ($confirm -match 'Oui') {
         [bool]$value = $true
     }

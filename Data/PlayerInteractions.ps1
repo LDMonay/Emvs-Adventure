@@ -101,3 +101,30 @@ function DamageLife ($value) {
     }
     
 }
+
+function RegenPM ($value) {
+    $localvalue = $value
+    $PMlocal = $PMActu
+    $Script:PMActu = $PMActu + $value
+    if ($PMActu -gt $PM)
+    {
+        $Script:PMActu = $PM
+        $localvalue = ($PM - $PMlocal)
+    }
+    Write-Host "Vous avez regenéré $localvalue PM" -ForegroundColor Magenta
+    Write-Host "Vous avez maintenant $PMActu PM" -ForegroundColor DarkMagenta
+}
+
+function DamagePM ($value) {
+    $Script:PMActu = $PMActu - $value
+    if ($PMActu -lt 0)
+    {
+        $Script:PMActu = 0
+    }
+    else
+    {
+        Write-Host "Vous avez perdu $value PM" -ForegroundColor Magenta
+        Write-Host "Vous avez maintenant $PMActu PM" -ForegroundColor DarkMagenta
+    }
+    
+}

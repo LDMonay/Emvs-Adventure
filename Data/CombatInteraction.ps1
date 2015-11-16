@@ -7,6 +7,7 @@
 [int]$TurnCount = 0 # Nombre de tour
 [int]$MinDegatOpp = 0 # Dégat minimum de l'adversaire
 [int]$MaxDegatOpp = 10 # Dégat maximum de l'adversaire
+[int]$PVOppMax = 100 # PV max adversaire
 [int]$PVOpp = 100 # PV Adversaire
 [int]$OppXP = 100 # XP gagné pour avoir tué l'adversaire
 [string]$NameOpp = "Une créature" # Nom affiché de l'adversaire
@@ -19,6 +20,11 @@
 [int]$TimeBoostAttack = 0 # Variable traquant le temps restant au Buff
 [bool]$BoostDefense = $false # Variable traquant si un buff de défense
 [int]$TimeBoostDefense = 0 # Variable traquant le temps restant au Buff
+[string]$OppAI = "Standard" # Variable définnisant le comportement de l'ennemi
+[string[]]$OppStatuts = @("None","None","None")
+[string[]]$PlayerStatus = @("None","None","None")
+[bool]$PlayerTurnOK = $true
+[bool]$OppTurnOK = $true
 
 # Fonction Permettant de reset les valeurs avant un prochain combat
 function ResetValue ()
@@ -31,6 +37,7 @@ function ResetValue ()
     $Script:MinDegatOpp = 0
     $Script:MaxDegatOpp = 10
     $Script:PVOpp = 100
+    $Scritp:PVOppMax = 100
     $Script:NameOpp = "Une créature"
     $Script:PlayerIsAway = $false
     $Script:OppXP = 100
@@ -42,6 +49,11 @@ function ResetValue ()
     $Script:TimeLackAttack = 0
     $Script:TimeLackDefense = 0
     $Script:TimeBoostAttack = 0
+    $Script:OppAI = "Standard"
+    $Script:OppStatuts = "None","None","None"
+    $Script:PlayerStatuts = "None","None","None"
+    $Script:OppTurnOK = $true
+    $Script:PlayerTurnOK = $true
 }
 
 # Fonction de combat
@@ -67,6 +79,7 @@ function StartBattle ($DegatMinOpp, $DegatMaxOpp, $OppPV, $OppXP, $OppName)
         $Script:BattleIsActive = $true
         $Script:MinDegatOpp = $DegatMinOpp
         $Script:MaxDegatOpp = $DegatMaxOpp
+        $Script:PVOppMax = $OppPV
         $Script:PVOpp = $OppPV
         $Script:PlayerArmor = $ArmurePJ
 
@@ -100,9 +113,19 @@ function StartBattle ($DegatMinOpp, $DegatMaxOpp, $OppPV, $OppXP, $OppName)
             if ($BoostDefense -eq $true) {$Script:TimeBoostDefense--; if($TimeBoostDefense -lt 0) {$BoostDefense = $false; Write-Host "Votre défense redevient normal..." -ForegroundColor Yellow; $Script:TimeBoostDefense = 0; echo ""}} 
             if ($BoostAttack -eq $true) {$Script:TimeBoostAttack--; if($TimeBoostAttack -lt 0) {$BoostAttack = $false; Write-Host "Votre attaque redevient normal..." -ForegroundColor Yellow; $Script:TimeBoostAttack = 0; echo ""}}
 
-            # Le tour du joueur commence concrétement
+            # On applique les effets de status
 
-            PlayerTurn
+            PlayerApplyStatus
+
+            # Le tour du joueur commence concrétement
+            if ($PlayerTurnOK)
+            {
+                PlayerTurn
+            }
+            else
+            {
+                Write-Host "Vous n'arrivez pas à faire quoi que ce soit !!!" -ForegroundColor Red
+            }
 
             # Fin du tour du joueur
 
@@ -131,7 +154,18 @@ function StartBattle ($DegatMinOpp, $DegatMaxOpp, $OppPV, $OppXP, $OppName)
 
             # Si l'adversaire n'est pas mort, c'est à son tour
 
-            OppTurn
+            # On applique les effets de status
+
+            OppApplyStatus
+
+            if ($OppTurnOK)
+            {
+                OppTurn
+            }
+            else
+            {
+                Write-Host "$OppName n'arrive pas à agir !" -ForegroundColor Green
+            }
             pause
         }
 
@@ -161,7 +195,7 @@ function PlayerTurn ()
     }
     elseif ($Todo -match "m")
     {
-        PlayerMagic
+        MagicMenu
     }
     elseif ($Todo -match "f")
     {
@@ -258,43 +292,35 @@ function PlayerAttack ()
         Start-Sleep 1
     }
 }
-
-# Fonction de magie
-
-function PlayerMagic ()
-{
-
-
-
-
-
-}
-
  
 function PlayerDefend ()
 {
     echo ""
     Write-Host "[DEFENSE] Que faire ?" -ForegroundColor Yellow
-    Write-Host "(Restauration / R ; Défense normal / D ; Défense critique / C)" -ForegroundColor Gray
+    Write-Host "(Coup de bouclier / B ; Défense normal / D ; Défense critique / C)" -ForegroundColor Gray
     $Todo = Read-Host
     if ($Todo -match "r")
     {
-        Write-Host "Vous vous préparez à vous réstaurer !" -ForegroundColor Cyan
+        Write-Host "Vous assénez un coup de bouclier !" -ForegroundColor Cyan
 
         # Random de l'armure (appliquant les différents buff / débuff)
 
-        $Script:BoostArmorValue += ((Randomize $CarEndurance ($CarEndurance * 10)) / 2)
+        $Script:BoostArmorValue += ((Randomize $CarEndurance ($CarEndurance * 5)) / 2)
         if($LackDefense -eq $true) { $Script:BoostArmorValue = $BoostArmorValue / 2 }
         if($BoostDefense -eq $true) { $Script:BoostArmorValue = $BoostArmorValue * 2 }
 
-        # Random de la regen
+        # Random des dégats
 
-        $regenvalue = Randomize ($CarInt) ($CarInt * 3)
-        Regenlife $regenvalue
+        $Degat = (Randomize $DegatMin $DegatMax) / 2
+        if($LackAttack -eq $true) { $Degat = $Degat / 2 }
+        if($BoostAttack -eq $true) { $Degat = $Degat * 2 }
+        # On retranche les dégats aux pv de l'adversaire
+        $Script:PVOpp = $PVOpp - $Degat        
 
          # On indique que le joueur se défend
         $Script:PlayerDefend = $true
         Start-Sleep 1
+        Write-Host "Vous infligez $Degat dégats à $NameOpp !" -ForegroundColor Green
         echo ""
         Write-Host "Vous augementez votre armure de $BoostArmorValue !" -ForegroundColor Green
     }
@@ -304,7 +330,7 @@ function PlayerDefend ()
 
         # Random de l'armure (appliquant les différents buff / débuff)
 
-        $Script:BoostArmorValue += Randomize $CarEndurance ($CarEndurance * 10)
+        $Script:BoostArmorValue += Randomize $CarEndurance ($CarEndurance * 5)
         if($LackDefense -eq $true) { $Script:BoostArmorValue = $BoostArmorValue / 2 }
         if($BoostDefense -eq $true) { $Script:BoostArmorValue = $BoostArmorValue * 2 }
         # On indique que le joueur se défend
@@ -319,7 +345,7 @@ function PlayerDefend ()
 
         # Random de l'armure (appliquant les différents buff / débuff)
 
-        $Script:BoostArmorValue += (Randomize $CarEndurance ($CarEndurance * 10)) * 2
+        $Script:BoostArmorValue += (Randomize $CarEndurance ($CarEndurance * 5)) * 2
         if($BoostDefense -eq $true) { $Script:BoostArmorValue = $BoostArmorValue * 2 }
         # On indique que le joueur se défend
         $Script:PlayerDefend = $true
@@ -376,21 +402,7 @@ function PlayerRun ()
 
 function OppTurn ()
 {
-    echo ""
-    Write-Host "$NameOpp vous attaque !" -ForegroundColor Red
-    $Degat = Randomize $MinDegatOpp $MaxDegatOpp
-    $Degat = $Degat - $PlayerArmor - $BoostArmorValue
-    Start-Sleep 1
-    echo ""
-    if ($Degat -gt 0)
-    {
-        DamageLife $Degat
-    }
-    else
-    {
-        Write-Host "$NameOpp ne vous inflige aucun dégat !" -ForegroundColor Green
-    }
-
+    EnnemyAction $OppAI
 }
 
 function OppCheckDeath ()
@@ -401,4 +413,17 @@ function OppCheckDeath ()
         $dead = $true
     }
     return $dead
+}
+
+function PlayerApplyStatus () 
+{
+    
+
+
+}
+
+function OppApplyStatus ()
+{
+
+
 }

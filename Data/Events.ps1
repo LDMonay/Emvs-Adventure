@@ -9,21 +9,19 @@ function StartEvent ($eventname) {
 		{
             Write-Host "Vous rencontrez un élève" -ForegroundColor Yellow
             $Chance = Randomize 0 100
-			if ($Chance -le 30)
+			if ($Chance -le 15)
             {
                 Write-Host "L'élève vous trouve sympa et vous offre un objet"
-                $item = RandomFood
-                AddItem $item
+                DropItem -DropPercent 80 -DropType "Food","Weapon" -RarityMin 1
             }
             elseif ($Chance -le 80)
             {
-                Write-Host "L'élève à l'air mécontant et vous attaque !" -ForegroundColor Red
+                Write-Host "L'élève à l'air mécontent et vous attaque !" -ForegroundColor Red
                 pause
-                StartBattle 15 50 (Randomize 80 120) 180 "l'élève"
+                StartBattle 15 50 (Randomize 100 160) 180 "l'élève"
                 if ($PlayerIsAway -eq $false)
                 {
-                    $item = RandomFood
-                    AddItem $item
+                    DropItem -DropPercent 80 -DropType "Food","Weapon" -RarityMin 1
                 }
 
             }
@@ -36,21 +34,19 @@ function StartEvent ($eventname) {
         {
             Write-Host "Vous rencontrez une élève" -ForegroundColor Yellow
             $Chance = Randomize 0 100
-			if ($Chance -le 20)
+			if ($Chance -le 10)
             {
                 Write-Host "L'élève vous trouve sympa et vous offre un objet"
-                $item = RandomCommon
-                AddItem $item
+                DropItem -DropPercent 80 -DropType "Food","Common" -RarityMin 1
             }
             elseif ($Chance -le 80)
             {
-                Write-Host "L'élève à l'air mécontant et vous attaque !" -ForegroundColor Red
+                Write-Host "L'élève à l'air mécontente et vous attaque !" -ForegroundColor Red
                 pause
-                StartBattle 15 50 (Randomize 80 120) 180 "l'élève"
+                StartBattle 20 50 (Randomize 100 140) 180 "l'élève"
                 if ($PlayerIsAway -eq $false)
                 {
-                    $item = RandomCommon
-                    AddItem $item
+                    DropItem -DropPercent 80 -DropType "Common","Food" -RarityMin 1
                 }
 
             }
@@ -64,22 +60,20 @@ function StartEvent ($eventname) {
             Write-Host "Vous tombez nez à nez avec une fille dans une colère sombre !!!" -ForegroundColor Red
             Write-Host "Elle vous attaque !!!" -ForegroundColor Red
             pause
-            StartBattle 25 50 (Randomize 100 160) 180 "Furie"
+            StartBattle 25 60 (Randomize 100 200) 180 "Furie"
             if ($PlayerIsAway -eq $false)
             {
-                $item = RandomCommon
-                AddItem $item
+                DropItem -DropPercent 80 -DropType "Common","Weapon" -RarityMin 1               
             }
         }
         "Caid"
         {
             Write-Host "Vous rencontrez un caid de mauvaise humeur" -ForegroundColor Yellow
             pause
-            StartBattle 15 50 100 200 "le caid"
+            StartBattle 15 70 260 200 "le caid"
             if ($PlayerIsAway -eq $false)
             {
-                $item = RandomWeapon
-                AddItem $item
+                DropItem -DropPercent 80 -DropType "Armor","Weapon" -RarityMin 1
             }
         }
         "Selecta"
@@ -93,9 +87,9 @@ function StartEvent ($eventname) {
             }
             elseif ($Chance -le 90)
             {
-               $prix = Randomize 10 300
+               $prix = Randomize 10 100
                $prix = $prix / 10
-               $item = RandomFood
+               $item = DropName -DropPercent 100 -DropType "Food" -RarityMin 1
                Write-Host "Le selecta propose $item pour la modique somme de $prix francs" -ForegroundColor Yellow
                Write-Host "Achetez $item ?"
                $confirm = ConfirmCommand
@@ -193,8 +187,7 @@ function StartEvent ($eventname) {
                 StartBattle 20 60 170 300 "l'italien en colère"
                 if ($PlayerIsAway -eq $false)
                 {
-                    $item = RandomFood
-                    AddItem $item
+                    DropItem -DropPercent 80 -DropType "Food","Weapon" -RarityMin 1
                 }
             }
         }
@@ -206,11 +199,10 @@ function StartEvent ($eventname) {
             {
                 Write-Host "Le prof vous crie dessus et se prépare à vous attaquer !" -ForegroundColor Red
                 pause
-                StartBattle 30 70 (Randomize 120 240) 250 "le prof"
+                StartBattle 30 70 (Randomize 160 360) 250 "le prof"
                 if ($PlayerIsAway -eq $false)
                 {
-                    $item = RandomCommon
-                    AddItem $item
+                    DropItem -DropPercent 80 -DropType "Common","Armor" -RarityMin 1
                 }
 
             }
@@ -238,7 +230,7 @@ function StartEvent ($eventname) {
                 {
                     Write-Host "FABIEN COPPI : Oh yeeeeah ! Allez c'est parti" -ForegroundColor Red
                     pause
-                    StartBattle 45 120 550 1000 "Fabien Coppi"
+                    StartBattle 45 120 750 1000 "Fabien Coppi"
                     if ($PlayerIsAway -eq $false)
                     {
                         Write-Host "FABIEN COPPI : Houla c'était une bonne baston... Tiens prend ca pour comme récompense" -ForegroundColor Yellow
@@ -262,17 +254,9 @@ function StartEvent ($eventname) {
             Write-Host "Vous découvrez un sac à dos abandonné" -ForegroundColor Yellow
             Write-Host "Vous fouillez à l'intérieur" -ForegroundColor Gray
             $Chance = Randomize 0 100
-            if ($Chance -le 30)
+            if ($Chance -le 80)
             {
-               AddItem (RandomFood)
-            }
-            elseif ($Chance -le 60)
-            {
-                AddItem (RandomWeapon)
-            }
-            elseif ($Chance -le 90)
-            {
-                AddItem (RandomCommon)
+                DropItem -DropPercent 100 -RarityMin 1 -RarityMax 2 -RarityMultiplier 2
             }
             else
             {
@@ -333,7 +317,7 @@ function StartEvent ($eventname) {
             {
                     Write-Host "L'homme enfile un masque de Luchador !" -ForegroundColor Red
                     pause
-                    StartBattle 60 160 750 1200 "un Luchador"
+                    StartBattle 60 160 780 1200 "un Luchador"
                     if ($PlayerIsAway -eq $false)
                     {
                         Write-Host "M. FAZIO : Je reconnais ta force, prend ceci en gage de ta victoire" -ForegroundColor Yellow
@@ -341,40 +325,12 @@ function StartEvent ($eventname) {
                     }
             }
         }
-        "9GAG"
-        {
-            Write-Host "Vous regarder un post..." -ForegroundColor Gray
-            $Chance = Randomize 0 100
-            if ($Chance -le 30)
-            {
-               Write-Host "Vous découvrez un post particulièrement rigolo !" -ForegroundColor Yellow
-            }
-            elseif ($Chance -le 60)
-            {
-                Write-Host "Vous découvrez un post rassurant !" -ForegroundColor Green
-                RegenLife 3
-            }
-            elseif ($Chance -le 90)
-            {
-               Write-Host "Vous découvrez un post qui vous choque !" -ForegroundColor Red
-               DamageLife 3
-            }
-            elseif ($Chance -le 92)
-            {
-                Write-Host "Une forme se matérialise devant vous !!!" -ForegroundColor Red
-                StartEvent "DOUCLE"
-            }
-            else
-            {
-                Write-Host "Vous ne découvrez qu'un post pas rigolo" -ForegroundColor Gray
-            } 
-        }
         "DOUCLE"
         {
             Write-Host "Vous rencontrez un homme mystérieux..." -ForegroundColor Gray
             Write-Host "DOUGLAS CLERC : A que coucou $Nom. A que, On va dans un coin. A que, je te tue"
             pause
-            StartBattle 60 120 600 1000 "Douglas Clerc"
+            StartBattle 60 100 720 1000 "Douglas Clerc"
             if ($PlayerIsAway -eq $false)
             {
                 Write-Host "DOUGLAS CLERC : A que tu es plus fort que prévu..." -ForegroundColor Yellow
@@ -411,7 +367,7 @@ function StartEvent ($eventname) {
             Write-Host "Un homme sournois vous approche !" -ForegroundColor Yellow
             Write-Host "M. RAUSIS : Jamais vous ne batterez le maitre des pièges !!!" -ForegroundColor Red
             pause
-            StartBattle 10 150 800 1200 "le maitre des pièges"
+            StartBattle 40 150 800 1200 "le maitre des pièges"
             if ($PlayerIsAway -eq $false)
             {
                 Write-Host "M. RAUSIS : Impossible.... NOOOOOOOOOON !!!" -ForegroundColor Yellow
@@ -423,17 +379,9 @@ function StartEvent ($eventname) {
             Write-Host "Vous découvrez une grosse caisse..." -ForegroundColor Gray
             Write-Host "Vous fouillez à l'intérieur" -ForegroundColor Gray
             $Chance = Randomize 0 100
-            if ($Chance -le 30)
+            if ($Chance -le 80)
             {
-               AddItem (RandomFood)
-            }
-            elseif ($Chance -le 60)
-            {
-                AddItem (RandomWeapon)
-            }
-            elseif ($Chance -le 90)
-            {
-                AddItem (RandomCommon)
+                DropItem -DropPercent 100 -RarityMin 1 -RarityMax 2 -RarityMultiplier 2
             }
             else
             {
@@ -445,7 +393,7 @@ function StartEvent ($eventname) {
             Write-Host "Un homme menacant sort de l'ombre !" -ForegroundColor Red
             Write-Host "M. VERNAILLEN : Ach ! Il nous faut protecter le réserve ! Prépare toi à recevoir le mort !" -ForegroundColor Red
             pause
-            StartBattle 10 150 800 1200 "Vernaillen"
+            StartBattle 40 150 800 1200 "Vernaillen"
             if ($PlayerIsAway -eq $false)
             {
                 Write-Host "M. VERNAILLEN : NON ! Nous avons faille à tache !" -ForegroundColor Yellow
@@ -503,13 +451,12 @@ function StartEvent ($eventname) {
             Write-Host "La chimère fait des bubulles..." -ForegroundColor Gray
             Write-Host "Elle vous attaque !" -ForegroundColor Red
             pause
-            StartBattle 10 150 800 1200 "Un poulpe"
+            StartBattle 40 150 800 1200 "Un poulpe"
             if ($PlayerIsAway -eq $false)
             {
                 Write-Host "BASTIEN POTET : *Bruit de bulles* !!! " -ForegroundColor Yellow
                 AddItem "Magazine étrange"
             }
-
         }
 
     }

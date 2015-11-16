@@ -123,7 +123,7 @@ function LocationEvent ($location) {
             }
             elseif ($Chance -le 20)
             {
-                StartEvent "ANTGEN"
+                StartEvent "DOUCLE"
             }
             elseif ($Chance -le 70)
             {

@@ -17,8 +17,8 @@
 [double]$Argent = 0
 [string]$Nom = "Initialise"
 [string]$FilePath = $PSScriptRoot
-[string[]]$Inventaire = @("Coca-Cola","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien")
-[string[]]$KnownSpell = @("Lifetap")
+[string[]]$Inventaire = @("Coca-Cola","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien")
+[string[]]$KnownSpell = @("Lifetap","Scan","Fireball","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien","Rien")
 [string]$ArmeEquipe = "Poings"
 [string]$ArmureEquipe = "T-shirt"
 [int]$ValArmure = 5
@@ -43,7 +43,7 @@ function NewPlayer {
     $Script:Argent = Randomize 10 50
     [double]$Centimes = (Randomize 1 99) / 10
     $Script:Argent = $Argent + $Centimes
-    $Script:PV = Randomize 45 100
+    $Script:PV = Randomize 100 200
     $Script:PV = $PV + $CarEndurance
     $Script:PVActu = $PV
     $Script:PM = Randomize 20 60
@@ -83,7 +83,7 @@ function LevelUp {
     $Script:CarForce += 1
     $Script:CarEndurance += 1
     $Script:CarChance += 10
-    $Script:PV += Randomize 1 50 + $CarEndurance
+    $Script:PV += Randomize 30 60 + $CarEndurance
     $Script:PM += Randomize 1 20 + $CarInt
     $Script:DegatMinB += Randomize 1 10
     $Script:DegatMaxB += Randomize 2 20
