@@ -3,7 +3,7 @@
 [string[]]$DATANAMES = "Julien","Robin","Paul","Philippe","Snape","Dumbledor","Bru","Menendez","Arnaud","Fabien","Loïc","Douglas","Jonathan","Dario","Elie","Marc","Jules","Claire","Eric","Sacha","Micheal","Vladimir","Dimitiriev","Pavlov","Henri","Valais","Magi","Carp","Gérard","Hornet","JQUERY","#ImCool","Klign","Loki","Vulpix","Tad","Mok","Yuri","Spock","ERROR_NOT_FOUND","Bruce","Blue","Red","Yellow","Davis","Glairon","AEIOUY","Luther","Tyrone","FAZECLAN","Ptolémhé","Christopher","GrouGrou","Hopi","Windows","Steve","Adolf"
 [string[]]$DATAFNAMES = "Horis","Mangoulin","Severus","Albus","Galio","Fir","Mendez","Donnet","Monay","Regulus","Miro","Urdnot","Wrex","Garus","Shepard","Doc","Blue","Green","Lancer","Archer","Dlog","JAVASCRIPT","Nguyen","Gatorade","Select * from tbl","Densetsu","Yellow","Ant","Bull","Fremdi","Ghandi","Nizzard","Xeon","Zlorig","Bioukli","Stackoverflow","Wayne","Sanders","Geneva","BloupBloup","Kleiner","Klein","Ophrio","KGB","LutinVert","YOLO","MLG","Girrard","Tyranus","Lee","Mecanivel","Horilop","CANTTOUCHTHIS","Skrillex","Jobs","Titler"
 
-[string[]]$DATAFOOD_RARITY1 = "Coca-Cola","Bière","Pizza margarita","Pizza prochuito","Pizza au thon","Sandwich au jambon","Sprite","Steak de lion","Kit-Kat","Twix","Sandwich viande séchée","Menu étudiant"
+[string[]]$DATAFOOD_RARITY1 = "Coca-Cola","Bière","Pizza margarita","Pizza proscuitto","Pizza au thon","Sandwich au jambon","Sprite","Steak de lion","Kit-Kat","Twix","Sandwich viande séchée","Menu étudiant"
 [string[]]$DATAFOOD_RARITY2 = ""
 [string[]]$DATAFOOD_RARITY3 = ""
 [string[]]$DATAFOOD_RARITY4 = ""
