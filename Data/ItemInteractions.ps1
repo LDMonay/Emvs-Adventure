@@ -98,7 +98,7 @@ function UseFood ($foodname) {
             RegenLife $regen
             break
         }
-        "Pizza prochuito"
+        "Pizza proscuitto"
         {
             echo "Vous mangez votre pizza"
             $regen = Randomize 80 130
